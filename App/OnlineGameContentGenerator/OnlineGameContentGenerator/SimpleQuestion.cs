@@ -181,7 +181,7 @@ namespace OnlineGameContentGenerator
                 question.questionItems.Add(new questionItemSimple());
                 if (c.Name != "questionEdit")
                 {
-                    question.questionItems[i].itemText = c.Controls[1].Text;
+                    question.questionItems[i].itemText = c.Controls.Find("itemText", true)[0].Text;
                     question.questionItems[i].correct = ((CheckBox)c.Controls.Find("correct", true)[0]).Checked;
                     if (((CheckBox)c.Controls.Find("correct", true)[0]).Checked == true)
                     {
