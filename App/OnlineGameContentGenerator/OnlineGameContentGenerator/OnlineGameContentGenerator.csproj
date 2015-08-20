@@ -27,7 +27,7 @@
     <ProductName>Online Game Generator</ProductName>
     <PublisherName>Wilfrid Laurier Online Education</PublisherName>
     <MinimumRequiredVersion>1.1.0.6</MinimumRequiredVersion>
-    <ApplicationRevision>8</ApplicationRevision>
+    <ApplicationRevision>9</ApplicationRevision>
     <ApplicationVersion>1.2.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
