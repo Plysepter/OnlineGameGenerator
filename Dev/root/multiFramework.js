@@ -19,7 +19,15 @@ function multiCheck(e, optionNumber)
 	//Check if user selected correct answer
 	if(playerAnswer == question.answer)
 	{
-		scoreIncrease(1);
+		if (question.nextQIndex == -1)
+		{
+			scoreIncrease(currentGameSession.scoreWeights.length - 1);
+		}
+		else
+		{
+			scoreIncrease(currentGameSession.scoreWeights[question.nextQIndex]);
+		}
+		//scoreIncrease(1);
 	}
 	multiResults(optionNumber);
 }

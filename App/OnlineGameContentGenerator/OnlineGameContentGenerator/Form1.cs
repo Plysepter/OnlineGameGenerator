@@ -171,62 +171,6 @@ namespace OnlineGameContentGenerator
             }
         }
 
-        //DnD item
-        void addItem_Click(object sender, EventArgs e)
-        {
-            //Creates a panel for the user to enter items into a DND container. WILL SPAWN IN THE SELECTED CONTAINER
-            questionObjectComplex question = game[(int)lastSelected.Tag] as questionObjectComplex;
-
-            Panel pnlItem = new Panel();
-            pnlItem.Name = itemCount.ToString();
-            pnlItem.Size = new Size(315, 36);
-            pnlItem.BackColor = System.Drawing.Color.DarkGray;
-
-            //User can enter the items text
-            Label itemNum = new Label();
-            itemNum.Location = new Point(4, 10);
-            itemNum.Text = "#" + (itemCount + 1).ToString();
-            itemNum.Name = "itemNum";
-            itemNum.Size = new Size(29, 13);
-            TextBox itemTextBox = new TextBox();
-            itemTextBox.Name = "itemBaseText";
-            itemTextBox.Location = new Point(33, 7);
-            itemTextBox.Size = new Size(253, 20);
-            itemTextBox.MaxLength = 100;
-
-            //Configure deleteItem
-            Button deleteItem = new Button();
-            deleteItem.Name = "deleteItem";
-            deleteItem.Text = "X";
-            deleteItem.Location = new Point(292, 7);
-            deleteItem.Size = new Size(20, 20);
-            deleteItem.FlatStyle = FlatStyle.Flat;
-            deleteItem.FlatAppearance.BorderSize = 0;
-            deleteItem.FlatAppearance.BorderColor = System.Drawing.Color.Red;
-            deleteItem.BackColor = System.Drawing.Color.Black;
-            deleteItem.ForeColor = System.Drawing.Color.White;
-            deleteItem.Click += deleteABaseItem;
-            itemCount++;
-
-            if (question != null)
-            {
-                int box = int.Parse(((Button)sender).Parent.Name);
-                //If the list of items doesn't exist, create it
-                if (question.questionItems[box - 1].items == null)
-                {
-                    question.questionItems[box - 1].items = new List<questionItemBase>();
-                }
-                question.questionItems[box - 1].items.Add(new questionItemBase());
-                game[(int)lastSelected.Tag] = question;
-            }
-
-            var panel = ((Button)sender).Parent;
-            pnlItem.Controls.Add(itemNum);
-            pnlItem.Controls.Add(itemTextBox);
-            pnlItem.Controls.Add(deleteItem);
-            panel.Controls.Add(pnlItem);
-        }
-
         private void applyQuestionSettingsEvent(object sender, EventArgs e)
         {
             applyQuestionSettings();

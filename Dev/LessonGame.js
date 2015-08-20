@@ -15,9 +15,9 @@ function question1() {
 	//clear the question variable to fill with new content
 	question = {};
 	//add the weight of the question to the scoreWeights array. (Sets the weight)
-	currentGameSession.scoreWeights.push(0);
+	currentGameSession.scoreWeights.push(5);
 	//Sets the questions max score
-	currentGameSession.maxScore.push(1);
+	currentGameSession.maxScore.push(5);
 	var options = ["A", "B", "C", "D"];
 	//Popups is only for multiple choice questions and does not need to be included
 	var popupItems = [["Hello A!", "Sup?"],["Hello B!", "Sup?"], ["Hello C!", "Sup?"], ["Hello D!", "Sup?"]];
@@ -33,7 +33,7 @@ function question1() {
 
 function question2() {
 	question = {};
-	currentGameSession.scoreWeights.push(0);
+	currentGameSession.scoreWeights.push(10);
 	currentGameSession.maxScore.push(10);
 	var options = ["Played guitar with his teeth", "Said he felt small after first hearing Jimi Hendrix", "Played guitar in The Who",
 		"Played guitar in Cream", "Had a band called The Experience", "Set his guitar on fire at Monterey Pop Festival", "Smashed his guitar at Monterey Pop Festival",

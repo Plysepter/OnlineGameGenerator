@@ -44,6 +44,11 @@ function dropped(e){
 	{
 		e.target.appendChild(document.getElementById(src));
 	}
+	//if the user drops it on another item, move it to the parent.
+	if(e.target.className == 'item')
+	{
+		e.target.parentNode.appendChild(document.getElementById(src));
+	}
 }
 
 //Go through all items and verify if they are in the correct container.
