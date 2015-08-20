@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 namespace OnlineGameContentGenerator
@@ -101,7 +102,7 @@ namespace OnlineGameContentGenerator
             applyQuestionInfo.BackColor = System.Drawing.Color.Black;
             applyQuestionInfo.ForeColor = System.Drawing.Color.White;
             applyQuestionInfo.Click += applyQuestionSettingsEvent;
-        }        
+        }
 
         //Load information for the selected question
         private void loadPnlQuestionDetails()
@@ -243,6 +244,7 @@ namespace OnlineGameContentGenerator
                 if (text == "" || text == null)
                 {
                     errorHandle("Please enter a question before continuing.");
+                    return;
                 }
                 else
                 {
@@ -250,6 +252,7 @@ namespace OnlineGameContentGenerator
                     if (type.Text == "" || type.Text == null)
                     {
                         errorHandle("Please select a question type before continuing.");
+                        return;
                     }
                     //Remove the apply button, disable changing the question type and store basic info into the array
                     else
@@ -277,8 +280,6 @@ namespace OnlineGameContentGenerator
                         }
                         else
                         {
-                            errorHandle("Invalid question type, please select one from the drop down menu.");
-                            return;
                         }
                         questionEdit.Controls.Remove(apply);
                         type.Enabled = false;
@@ -361,9 +362,9 @@ namespace OnlineGameContentGenerator
                 {
                     mc = true;
                     //Check for if game uses popups in any of the questions. If it does, will include popup plugin.
-                    for (int i = 0; i < question.Value.questionItems.Count; i++)
+                    for (int f = 0; f < question.Value.questionItems.Count; f++)
                     {
-                        if (question.Value.questionItems[i].popups.popupEnabled == true)
+                        if (question.Value.questionItems[f].popups.popupEnabled == true)
                         {
                             popup = true;
                         }
@@ -375,243 +376,251 @@ namespace OnlineGameContentGenerator
                 }
             }
 
-            using (var w = new StreamWriter(path))
+            //Using StringBuilder instead of just a string or the original write, due to performance gains. When modifying a string repeatedly, a lot of overhead is used with realocating the memory. StringBuilder does
+            //not deal with this issue and therefore saves time. The reason I am changing to just a single write vs multiple is due to errors. This way I can return out of the function without having a half completed file
+            //saved to disk.
+
+            //Setting the default max capacity to around 1500 as a start and it will automatically double when capacity is reached. Just to make sure that it is not constantly allocating more memory.
+            StringBuilder documentContent = new StringBuilder("<!DOCTYPE html>", 1500);
+
+            documentContent.Append("<html lang=\"en\">");
+            documentContent.Append("<head>");
+            documentContent.Append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">");
+            documentContent.Append("<link rel=\"stylesheet\" href=\"https://mylearningspace.wlu.ca/shared/root/tna.css\">");
+            //if a question is a drag n drop then link the framework
+            if (dnd == true)
             {
-                w.Write("<!DOCTYPE html>");
-                w.Write("<html lang=\"en\">");
-                w.Write("<head>");
-                w.Write("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">");
-                w.Write("<link rel=\"stylesheet\" href=\"https://mylearningspace.wlu.ca/shared/root/tna.css\">");
-                //if a question is a drag n drop then link the framework
-                if (dnd == true)
+                documentContent.Append("<link rel=\"stylesheet\" href=\"https://mylearningspace.wlu.ca/shared/root/dnd.css\">");
+            }
+            //if a question is a multiple choice then link the appropriate framework
+            if (mc == true)
+            {
+                if (popup == true)
                 {
-                    w.Write("<link rel=\"stylesheet\" href=\"https://mylearningspace.wlu.ca/shared/root/dnd.css\">");
+                    documentContent.Append("<link rel=\"stylesheet\" href=\"https://mylearningspace.wlu.ca/shared/root/pop.css\">");
                 }
-                //if a question is a multiple choice then link the appropriate framework
-                if (mc == true)
-                {
-                    if (popup == true)
-                    {
-                        w.Write("<link rel=\"stylesheet\" href=\"https://mylearningspace.wlu.ca/shared/root/pop.css\">");
-                    }
-                }
-                if (colour != null)
-                {
-                    w.Write("<style>#header,.item,.option,.question{background:" + colour + "}.button{color:" + colour + "}</style>");
-                }
-                w.Write("<script src=\"https://mylearningspace.wlu.ca/shared/root/jsf.js\" type=\"text/javascript\" async></script>");
-                //Writting Javascript underneath the css, this is why I check the booleans twice.
-                if (dnd == true)
-                {
-                    w.Write("<script src=\"https://mylearningspace.wlu.ca/shared/root/dnf.js\" type=\"text/javascript\" async></script>");
-                }
-                if (mc == true)
-                {
-                    w.Write("<script src=\"https://mylearningspace.wlu.ca/shared/root/mpf.js\" type=\"text/javascript\" asnyc></script>");
-                }
-                w.Write("<script>");
-                bool multiQ = false;
-                string questionArray = "";
-                int maxScore = 0;
-                int i = 1;
-                List<questionItemSimple> simpleOptions = new List<questionItemSimple>();
-                List<questionItemBase> complexOptions = new List<questionItemBase>();
-                string options = "";
-                string itemDrops = "";
-                string popupItems = "";
-                string answers = "";
-                int nextQuestion;
+            }
+            if (colour != null)
+            {
+                documentContent.Append("<style>#header,.item,.option,.question{background:" + colour + "}.button{color:" + colour + "}</style>");
+            }
+            documentContent.Append("<script src=\"https://mylearningspace.wlu.ca/shared/root/jsf.js\" type=\"text/javascript\" async></script>");
+            //Writting Javascript underneath the css, this is why I check the booleans twice.
+            if (dnd == true)
+            {
+                documentContent.Append("<script src=\"https://mylearningspace.wlu.ca/shared/root/dnf.js\" type=\"text/javascript\" async></script>");
+            }
+            if (mc == true)
+            {
+                documentContent.Append("<script src=\"https://mylearningspace.wlu.ca/shared/root/mpf.js\" type=\"text/javascript\" asnyc></script>");
+            }
+            documentContent.Append("<script>");
+            bool multiQ = false;
+            string questionArray = "";
+            int maxScore = 0;
+            int i = 1;
+            List<questionItemSimple> simpleOptions = new List<questionItemSimple>();
+            List<questionItemBase> complexOptions = new List<questionItemBase>();
+            string options = "";
+            string itemDrops = "";
+            string popupItems = "";
+            string answers = "";
+            int nextQuestion;
 
-                if (game.Count > 1)
-                {
-                    multiQ = true;
-                }
-                
-                foreach (var question in game)
-                {
-                    options = "";
-                    popupItems = "";
-                    answers = "";
-                    nextQuestion = i;
-                    if (i != 1)
-                    {
-                        questionArray += ", ";
-                    }
-                    //q stands for question
-                    questionArray += "q" + i;
-                    if (question.Value is questionObjectSimple)
-                    {
-                        w.Write("function q" + i + "() {");
-                        w.Write("question = {};");
-                        w.Write("currentGameSession.scoreWeights.push(" + question.Value.weight + ");");
+            if (game.Count > 1)
+            {
+                multiQ = true;
+            }
 
-                        for (int c = 0; c < question.Value.questionItems.Count; c++)
+            foreach (var question in game)
+            {
+                options = "";
+                popupItems = "";
+                answers = "";
+                nextQuestion = i;
+                if (i != 1)
+                {
+                    questionArray += ", ";
+                }
+                //q stands for question
+                questionArray += "q" + i;
+                if (question.Value is questionObjectSimple)
+                {
+                    documentContent.Append("function q" + i + "() {");
+                    documentContent.Append("question = {};");
+                    documentContent.Append("currentGameSession.scoreWeights.push(" + question.Value.weight + ");");
+
+                    for (int c = 0; c < question.Value.questionItems.Count; c++)
+                    {
+                        //Add correct items to the answers string
+                        if (question.Value.questionItems[c].correct == true)
                         {
-                            //Add correct items to the answers string
-                            if (question.Value.questionItems[c].correct == true)
+                            maxScore++;
+                            if (answers == "")
                             {
-                                maxScore++;
-                                if (answers == "")
-                                {
-                                    //o for options
-                                    answers += "o[" + (c) + "]";
-                                }
-                                else
-                                {
-                                    answers += ", o[" + (c) + "]";
-                                }
-                            }
-                            //Add the items in the question to the options list
-                            if (options == "")
-                            {
-                                options += "\"" + question.Value.questionItems[c].itemText + "\"";
+                                //o for options
+                                answers += "o[" + (c) + "]";
                             }
                             else
                             {
-                                options += ", \"" + question.Value.questionItems[c].itemText + "\"";
+                                answers += ", o[" + (c) + "]";
                             }
                         }
-                        w.Write("currentGameSession.maxScore.push(" + maxScore + ");");
-                        w.Write("var o = [" + options + "];");
-                        //Enable popups and include popup items
-                        for (int y = 0; y < question.Value.questionItems.Count; y++)
+                        //Add the items in the question to the options list
+                        if (options == "")
                         {
-                            if (question.Value.questionItems[y].popups.popupEnabled == true)
-                            {
-                                popup = true;
-                                if (popupItems != "")
-                                {
-                                    popupItems += " ,";
-                                }
-                                popupItems += "[\"" + question.Value.questionItems[y].popups.popupTitle + "\", \"" + question.Value.questionItems[y].popups.popupBody + "\"]";
-                            }
+                            options += "\"" + question.Value.questionItems[c].itemText + "\"";
                         }
-                        w.Write("var popupItems = [" + popupItems + "];");
-                        w.Write("var answer = " + answers + ";");
-                        w.Write("enablePopups(" + popup.ToString().ToLower() + ");");
-                        if (i == game.Count())
+                        else
                         {
-                            nextQuestion = -1;
+                            options += ", \"" + question.Value.questionItems[c].itemText + "\"";
                         }
-                        w.Write("question = {nextQIndex: " + nextQuestion + ", question: '" + question.Value.questionText + "', answer: answer, options: o, popup: " + popup.ToString().ToLower() + ", popupItems: popupItems};");
-                        w.Write("multiStart();");
-                        w.Write("}");
                     }
-                    else if (question.Value is questionObjectComplex)
+                    documentContent.Append("currentGameSession.maxScore.push(" + maxScore + ");");
+                    documentContent.Append("var o = [" + options + "];");
+                    //Enable popups and include popup items
+                    for (int y = 0; y < question.Value.questionItems.Count; y++)
                     {
-                        options = "";
-                        answers = "";
-                        itemDrops = "";
-
-                        w.Write("function q" + i + "() {");
-                        w.Write("question = {};");
-                        w.Write("currentGameSession.scoreWeights.push(" + question.Value.weight + ");");
-
-                        for (int j = 0; j < question.Value.questionItems.Count; j++)
+                        if (question.Value.questionItems[y].popups.popupEnabled == true)
                         {
-                            //reshuffle complexOptions list to randomize the listings in the game
-                            List<questionItemBase> complexOptionsTemp = new List<questionItemBase>();
-                            try
+                            popup = true;
+                            if (popupItems != "")
                             {
-                                for (int o = 0; o < question.Value.questionItems[j].items.Count; o++)
+                                popupItems += " ,";
+                            }
+                            popupItems += "[\"" + question.Value.questionItems[y].popups.popupTitle + "\", \"" + question.Value.questionItems[y].popups.popupBody + "\"]";
+                        }
+                    }
+                    documentContent.Append("var popupItems = [" + popupItems + "];");
+                    documentContent.Append("var answer = " + answers + ";");
+                    documentContent.Append("enablePopups(" + popup.ToString().ToLower() + ");");
+                    if (i == game.Count())
+                    {
+                        nextQuestion = -1;
+                    }
+                    documentContent.Append("question = {nextQIndex: " + nextQuestion + ", question: '" + question.Value.questionText + "', answer: answer, options: o, popup: " + popup.ToString().ToLower() + ", popupItems: popupItems};");
+                    documentContent.Append("multiStart();");
+                    documentContent.Append("}");
+                }
+                else if (question.Value is questionObjectComplex)
+                {
+                    options = "";
+                    answers = "";
+                    itemDrops = "";
+
+                    documentContent.Append("function q" + i + "() {");
+                    documentContent.Append("question = {};");
+                    documentContent.Append("currentGameSession.scoreWeights.push(" + question.Value.weight + ");");
+
+                    for (int j = 0; j < question.Value.questionItems.Count; j++)
+                    {
+                        //reshuffle complexOptions list to randomize the listings in the game
+                        List<questionItemBase> complexOptionsTemp = new List<questionItemBase>();
+                        try
+                        {
+                            for (int o = 0; o < question.Value.questionItems[j].items.Count; o++)
+                            {
+                                //Add itembox values into main item pool
+                                complexOptions.Add(question.Value.questionItems[j].items[o]);
+                            }
+                        }
+                        catch (Exception)
+                        {
+
+                            errorHandle("Cannot have a Container without items inside it. Sorry!");
+                            return;
+                        }
+                    }
+
+                    //Randomize the items in complexOptions so that the drag and drop doesn't display the options in the correct order.
+                    Random rng = new Random();
+                    int n = complexOptions.Count;
+                    while (n > 1)
+                    {
+                        n--;
+                        int k = rng.Next(0, n);
+                        questionItemBase value = complexOptions[k];
+                        complexOptions[k] = complexOptions[n];
+                        complexOptions[n] = value;
+                    }
+                    int tempararyCounter = 0;
+                    foreach (var item in complexOptions)
+                    {
+                        if (tempararyCounter != 0)
+                        {
+                            options += ", ";
+                        }
+                        options += "\"" + item.itemText + "\"";
+                        tempararyCounter++;
+                    }
+                    for (int y = 0; y < question.Value.questionItems.Count; y++)
+                    {
+                        //create item drops in same loop
+                        itemDrops += "'" + question.Value.questionItems[y].itemContainerLabel + "'";
+
+                        //if not the last item, place a comma to separate the items
+                        if (y != question.Value.questionItems.Count - 1)
+                        {
+                            itemDrops += ", ";
+                        }
+
+                        answers += "answers[" + y + "] = [";
+
+                        for (int r = 0; r < question.Value.questionItems[y].items.Count; r++)
+                        {
+                            for (int q = 0; q < complexOptions.Count; q++)
+                            {
+                                //Compare each correct item to all items in the list to match the indexes
+                                if (complexOptions[q] == question.Value.questionItems[y].items[r])
                                 {
-                                    //Add itembox values into main item pool
-                                    complexOptions.Add(question.Value.questionItems[j].items[o]);
-                                }
-                            }
-                            catch (Exception)
-                            {
+                                    answers += "[options[" + complexOptions.IndexOf(complexOptions[q]) + "]]";
 
-                                errorHandle("Cannot have a Container without items inside it. Sorry!");
-                            }
-                        }
-
-                        //Randomize the items in complexOptions so that the drag and drop doesn't display the options in the correct order.
-                        Random rng = new Random();
-                        int n = complexOptions.Count;
-                        while (n > 1)
-                        {
-                            n--;
-                            int k = rng.Next(0, n);
-                            questionItemBase value = complexOptions[k];
-                            complexOptions[k] = complexOptions[n];
-                            complexOptions[n] = value;
-                        }
-                        int tempararyCounter = 0;
-                        foreach (var item in complexOptions)
-                        {
-                            if (tempararyCounter != 0)
-                            {
-                                options += ", ";
-                            }
-                            options += "\"" + item.itemText + "\"";
-                            tempararyCounter++;
-                        }
-                        for (int y = 0; y < question.Value.questionItems.Count; y++)
-                        {
-                            //create item drops in same loop
-                            itemDrops += "'" + question.Value.questionItems[y].itemContainerLabel + "'";
-
-                            //if not the last item, place a comma to separate the items
-                            if (y != question.Value.questionItems.Count - 1)
-                            {
-                                itemDrops += ", ";
-                            }
-
-                            answers += "answers[" + y + "] = [";
-
-                            for (int r = 0; r < question.Value.questionItems[y].items.Count; r++)
-                            {
-                                for (int q = 0; q < complexOptions.Count; q++)
-                                {
-                                    //Compare each correct item to all items in the list to match the indexes
-                                    if (complexOptions[q] == question.Value.questionItems[y].items[r])
+                                    if (r != (question.Value.questionItems[y].items.Count - 1))
                                     {
-                                        answers += "[options[" + complexOptions.IndexOf(complexOptions[q]) + "]]";
-
-                                        if (r != (question.Value.questionItems[y].items.Count - 1))
-                                        {
-                                            answers += ", ";
-                                        }
-                                        else
-                                        {
-                                            answers += "];";
-                                        }
+                                        answers += ", ";
+                                    }
+                                    else
+                                    {
+                                        answers += "];";
                                     }
                                 }
                             }
                         }
-                        if (i == game.Count)
-                        {
-                            nextQuestion = -1;
-                        }
-                        maxScore = complexOptions.Count;
-                        w.Write("currentGameSession.maxScore.push(" + maxScore + ");");
-                        w.Write("var options = [" + options + "];");
-                        w.Write("var itemDrops = [" + itemDrops + "];");
-                        w.Write("var answers = new Array(2);");
-                        w.Write(answers);
-                        w.Write("question = {nextQIndex: " + nextQuestion + ", question: '" + question.Value.questionText + "', answer: answers, options: options, itemDrops: itemDrops};");
-                        w.Write("dndStart();}");
                     }
-                    i++;
+                    if (i == game.Count)
+                    {
+                        nextQuestion = -1;
+                    }
+                    maxScore = complexOptions.Count;
+                    documentContent.Append("currentGameSession.maxScore.push(" + maxScore + ");");
+                    documentContent.Append("var options = [" + options + "];");
+                    documentContent.Append("var itemDrops = [" + itemDrops + "];");
+                    documentContent.Append("var answers = new Array(2);");
+                    documentContent.Append(answers);
+                    documentContent.Append("question = {nextQIndex: " + nextQuestion + ", question: '" + question.Value.questionText + "', answer: answers, options: options, itemDrops: itemDrops};");
+                    documentContent.Append("dndStart();}");
                 }
-                w.Write("window.onload = function startupConfiguration() {currentGameSession.questionArray = [" + questionArray + "];setMaxScore(" + maxScore + ", false);headerSetup('" + gameN + "', " + multiQ.ToString().ToLower() + ");q1();}");
-                w.Write("</script>");
-                w.Write("<title id=\"title\">Questions</title>");
-                w.Write("</head>");
-                w.Write("<body>");
-                w.Write("<header id=\"header\">");
-                w.Write("<h1 id=\"gameName\"></h1>");
-                w.Write("<p id=\"score\"></p>");
-                w.Write("</header>");
-                w.Write("<span id=\"spacing\"></span>");
-                w.Write("<section id=\"questionArea\" class=\"slideDown\">");
-                w.Write("<header id=\"question\" class=\"question\"></header>");
-                w.Write("<div id=\"options\"></div>");
-                w.Write("</section>");
-                w.Write("</body>");
-                w.Write("</html>");
+                i++;
+            }
+            documentContent.Append("window.onload = function startupConfiguration() {currentGameSession.questionArray = [" + questionArray + "];setMaxScore(" + maxScore + ", false);headerSetup('" + gameN + "', " + multiQ.ToString().ToLower() + ");q1();}");
+            documentContent.Append("</script>");
+            documentContent.Append("<title id=\"title\">Questions</title>");
+            documentContent.Append("</head>");
+            documentContent.Append("<body>");
+            documentContent.Append("<header id=\"header\">");
+            documentContent.Append("<h1 id=\"gameName\"></h1>");
+            documentContent.Append("<p id=\"score\"></p>");
+            documentContent.Append("</header>");
+            documentContent.Append("<span id=\"spacing\"></span>");
+            documentContent.Append("<section id=\"questionArea\" class=\"slideDown\">");
+            documentContent.Append("<header id=\"question\" class=\"question\"></header>");
+            documentContent.Append("<div id=\"options\"></div>");
+            documentContent.Append("</section>");
+            documentContent.Append("</body>");
+            documentContent.Append("</html>");
+            using (var w = new StreamWriter(path))
+            {
+                w.Write(documentContent);
             }
         }
 

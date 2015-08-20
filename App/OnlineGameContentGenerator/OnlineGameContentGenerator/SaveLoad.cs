@@ -209,6 +209,7 @@ namespace OnlineGameContentGenerator
                     else
                     {
                         errorHandle("Item could not be added. Please try again.");
+                        return;
                     }
                 }
 
@@ -254,6 +255,7 @@ namespace OnlineGameContentGenerator
                 catch (Exception)
                 {
                     errorHandle("Invalid or corrupt file selected.");
+                    return;
                 } // end try-catch
 
 
