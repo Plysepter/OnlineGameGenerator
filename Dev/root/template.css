@@ -1,0 +1,84 @@
+body {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	background: #FDFDFD;
+	font-family: sans-serif;
+	z-index: 0;
+}
+
+#spacing {
+	padding-top: 4em;
+	display:block;
+}
+
+#header {
+	width: 100%;
+	text-align: center;
+	background: #330072;
+	color: #FFFFFF;
+	box-shadow: 0px 5px 12px #A0A0A0;
+	border-bottom: 1px solid #A0A0A1;
+	position: fixed;
+	z-index: 2;
+}
+
+#score {
+	color: #FFFFFF;
+	text-align: right;
+	display:inline;
+}
+
+#gameName {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	color: #FFFFFFF;
+}
+
+#questionArea {
+	width: 80%;
+	margin-left:10%;
+	text-align: center;
+	border-radius: 11px;
+	border: 1px solid #A0A0A1;
+	box-shadow: 4px 4px 7px #A0A0A0;
+
+
+}
+
+.question {
+	padding: 0.5% 0 1% 0;
+	background: #330072;
+	color: #FFFFFF;
+	border-radius: 10px 10px 0 0;
+
+	border-bottom: 1px solid #A0A0A1;
+}
+
+.option {
+	padding: 0;
+	display: block;
+	margin-left: 45%;
+	margin-bottom: 1%;
+	border: 0;
+	width: 8em;
+	height: 3em;
+	color: #FFFFFF;
+	background: #330072;
+	border-radius: 3px;
+	box-shadow: 2px 3px 1px #A0A0A0;
+}
+
+.button {
+	padding: 0;
+	margin: 0;
+	margin-left: 1em;
+	margin-right: 1em;
+	border: 0;
+	width: 3em;
+	height: 1.75em;
+	color: #330072;
+	background: #FFFFFF;
+	border-radius: 3px;
+}

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<!https://mylearningspace.wlu.ca/shared/>
+<link rel="stylesheet" href="root/tna.css">
+<script src="root/mpf.js" type="text/javascript"></script>
+<style>#header,.item,.option,.question{background:#4BEBC7}.button{color:#4BEBC7}</style>
+<script>function question1(){question={},currentGameSession.scoreWeights.push(0),currentGameSession.maxScore.push(1);var e=["A","B","C","D"],t=[["Hello A!","Sup?"],["Hello B!","Sup?"],["Hello C!","Sup?"],["Hello D!","Sup?"]],n=e[1];enablePopups(!0),question={nextQIndex:1,question:"Select Option B",answer:n,options:e,popup:!0,popupItems:t},multiStart()}function question2(){question={},currentGameSession.scoreWeights.push(0),currentGameSession.maxScore.push(10);var e=["Played guitar with his teeth","Said he felt small after first hearing Jimi Hendrix","Played guitar in The Who","Played guitar in Cream","Had a band called The Experience","Set his guitar on fire at Monterey Pop Festival","Smashed his guitar at Monterey Pop Festival","Played guitar on “Sunshine of Your Love”","Was said to steal Pete Townshend’s act","Had played guitar in John Mayall’s Blues Breakers"],t=["Jimi Hendrix","Eric Clapton","Pete Townshend","Jimi Hendrix & Pete Townshend"],n=new Array(2);n[0]=[e[4]],n[1]=[e[7],e[5]],n[2]=[e[0],e[2],e[9]],n[3]=[e[1],e[3],e[6],e[8]],question={nextQIndex:-1,question:"Match the information to the correct person",answer:n,options:e,itemDrops:t},dndStart()}window.onload=function(){currentGameSession.questionArray=[question1,question2],setMaxScore(10,!1),headerSetup("Jimmy Hendrix Quiz",!0),question1()};</script>
+<script src="root/jsf.js" type="text/javascript"></script>
+<link rel="stylesheet" href="root/pop.css">
+<title id="title">Questions</title>
+</head>
+<body>
+<header id="header">
+<h1 id="gameName"></h1>
+<p id="score"></p>
+</header>
+<span id="spacing"></span>
+<section id="questionArea" class="slideDown">
+<header id="question" class="question"></header>
+<div id="options"></div>
+</section>
+</body>
+</html>

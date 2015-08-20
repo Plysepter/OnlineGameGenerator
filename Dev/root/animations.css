@@ -1,0 +1,31 @@
+.slideDown{
+	animation-name: slideDown;
+	-webkit-animation-name: slideDown;	
+
+	animation-duration: .75s;
+	-webkit-animation-duration: .75s;
+
+	animation-timing-function: ease;	
+	-webkit-animation-timing-function: ease;	
+	z-index: 1;
+	visibility: visible;
+						
+}
+
+@keyframes slideDown {
+	0% {
+		transform: translateY(-200%);
+	}		
+	100% {
+		transform: translateY(0%);
+	}		
+}
+
+@-webkit-keyframes slideDown {
+	0% {
+		-webkit-transform: translateY(-200%);
+	}
+	100% {
+		-webkit-transform: translateY(0%);
+	}	
+}
