@@ -194,7 +194,6 @@ namespace OnlineGameContentGenerator
                 //Block users from deleting all questions, I am not wanting blank generated games!
                 errorHandle("Games must contain at least one question! \nAdd another question to delete this one.");
             }
-
         }
     }
 }

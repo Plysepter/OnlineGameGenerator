@@ -86,6 +86,7 @@ namespace OnlineGameContentGenerator
                 else
                 {
                     errorHandle("Item could not be added. Please try again.");
+                    return;
                 }
             }
 
@@ -207,6 +208,7 @@ namespace OnlineGameContentGenerator
                 if (hasCorrect == false)
                 {
                     errorHandle("Please make sure at least one option is marked as correct.");
+                    return;
                 }
             }
             //apply the changes to the question array
