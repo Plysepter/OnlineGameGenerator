@@ -88,15 +88,7 @@ function scoreIncrease(amount) {
 function scoreDecrease(amount) {
 	if(question.nextQIndex != 0)
 	{
-		//if it is the last question, we have to go to the array index differently as using the index of -1 is not going to get us anywhere.
-		if (question.nextQIndex == -1)
-		{
-			currentGameSession.scoreWeights[currentGameSession.scoreWeights.length - 1] -= amount;
-		}
-		else
-		{
-			currentGameSession.scoreWeights[question.nextQIndex] -= amount;
-		}
+		currentGameSession.scoreWeights[question.nextQIndex] -= amount;
 	}
 	calculateCurrentScore();
 	//update score for the user
@@ -116,15 +108,8 @@ function scoreReset(hardReset) {
 	//reset current question only
 	else if(question.nextQIndex != 0)
 	{
-		//have to access the last question differently as -1 is not a good index to work with.
-		if (question.nextQIndex == -1)
-		{
-			currentGameSession.scoreWeights[currentGameSession.scoreWeights.length - 1] = 0;
-		}
-		else
-		{
-			currentGameSession.scoreWeights[question.nextQIndex] = 0;
-		}
+		//access the questions score
+		currentGameSession.scoreWeights[question.nextQIndex] = 0;
 	}
 	calculateCurrentScore();
 	//update score to user
@@ -141,14 +126,7 @@ function setMaxScore(max, isQuestionMax) {
 	//if it is the question specific max score then set that questions score.
 	else if(question.nextQIndex != 0)
 	{
-		if (question.nextQIndex == -1)
-		{
-			currentGameSession.maxScore[currentGameSession.maxScore.length - 1] = max;
-		}
-		else
-		{
-			currentGameSession.maxScore[question.nextQIndex] = max;
-		}
+		currentGameSession.maxScore[question.nextQIndex] = max;
 	}
 	//update the score for the user
 	document.getElementById('score').innerHTML = currentGameSession.scoreWeights[0] + " of " + currentGameSession.maxScore[0];
