@@ -70,14 +70,7 @@ function scoreIncrease(amount) {
 	if(question.nextQIndex != 0)
 	{
 		//if it is the last question, we have to go to the array index differently as using the index of -1 is not going to get us anywhere.
-		if (question.nextQIndex == -1)
-		{
-			currentGameSession.scoreWeights[currentGameSession.scoreWeights.length - 1] = amount;
-		}
-		else
-		{
-			currentGameSession.scoreWeights[question.nextQIndex] = amount;
-		}
+		currentGameSession.scoreWeights[question.nextQIndex] = amount;
 	}
 	calculateCurrentScore();
 	//update the score to the user.
@@ -135,10 +128,13 @@ function setMaxScore(max, isQuestionMax) {
 //tally users score
 function calculateCurrentScore() {
 	var tempTotal = 0;
-	for(var i = 1; i < currentGameSession.scoreWeights.length; i++) {
+	for(var i = -1; i < currentGameSession.scoreWeights.length; i++) {
 		if(currentGameSession.scoreWeights[i] != undefined)
 		{
-			tempTotal += currentGameSession.scoreWeights[i];
+			if(i != 0)
+			{
+				tempTotal += currentGameSession.scoreWeights[i];
+			}
 		}
 		else
 		{
