@@ -20,15 +20,15 @@ function multiCheck(e, optionNumber)
 	{
 		if (question.nextQIndex == -1)
 		{
-			if ((currentGameSession.scoreWeights.length - 1) == (currentGameSession.maxScore.length - 1))
+			if ((currentGameSession.score.length - 1) == (currentGameSession.maxScore.length - 1))
 			{
-				scoreDecrease(currentGameSession.scoreWeights.length - 1);
+				scoreDecrease(currentGameSession.scoreWeights[-1]);
 			}
-			scoreIncrease(currentGameSession.scoreWeights.length - 1);
+			scoreIncrease(currentGameSession.scoreWeights[-1]);
 		}
 		else
 		{
-			if ((currentGameSession.scoreWeights.length - 1) == currentGameSession.maxScore[question.nextQIndex])
+			if ((currentGameSession.score.length - 1) == currentGameSession.maxScore[question.nextQIndex])
 			{
 				scoreDecrease(currentGameSession.scoreWeights[question.nextQIndex]);
 			}

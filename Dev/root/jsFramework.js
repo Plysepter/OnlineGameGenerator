@@ -1,7 +1,7 @@
 //Generic variable to place all required question information into to pass to the game modes module.
 var question;
 //Stores all the games constants. limiting global pollution. 
-var currentGameSession = {scoreWeights: [0], maxScore: [0], questionArray: [], addIns: []};
+var currentGameSession = {score: [0], scoreWeights: [0], maxScore: [0], questionArray: [], addIns: []};
 
 //move the user to the next question in the 'game'
 function nextQuestion() {
@@ -56,7 +56,7 @@ function removeLeftOvers() {
 function finish() {
 	document.getElementById('questionArea').innerHTML = '<header id="question" class="question">Complete!</header>' +
 		'<div id="options">' +
-			'<p>You scored ' + currentGameSession.scoreWeights[0] + " out of " + currentGameSession.maxScore[0] + '</p>' +
+			'<p>You scored ' + currentGameSession.score[0] + " out of " + currentGameSession.maxScore[0] + '</p>' +
 		'</div>';
 	//Hide all the navigation buttons and the score counter as it is already being displayed somewhere else.
 	document.getElementById('nextQ').style.visibility = "hidden";
@@ -70,22 +70,22 @@ function scoreIncrease(amount) {
 	if(question.nextQIndex != 0)
 	{
 		//if it is the last question, we have to go to the array index differently as using the index of -1 is not going to get us anywhere.
-		currentGameSession.scoreWeights[question.nextQIndex] = amount;
+		currentGameSession.score[question.nextQIndex] = amount;
 	}
 	calculateCurrentScore();
 	//update the score to the user.
-	document.getElementById('score').innerHTML = currentGameSession.scoreWeights[0] + " of " + currentGameSession.maxScore[0];
+	document.getElementById('score').innerHTML = currentGameSession.score[0] + " of " + currentGameSession.maxScore[0];
 }
 
 //This allows us to lower the score if we choose to, I do this when I wanted to reset a drag and drop excersize
 function scoreDecrease(amount) {
 	if(question.nextQIndex != 0)
 	{
-		currentGameSession.scoreWeights[question.nextQIndex] -= amount;
+		currentGameSession.score[question.nextQIndex] -= amount;
 	}
 	calculateCurrentScore();
 	//update score for the user
-	document.getElementById('score').innerHTML = currentGameSession.scoreWeights[0] + " of " + currentGameSession.maxScore[0];
+	document.getElementById('score').innerHTML = currentGameSession.score[0] + " of " + currentGameSession.maxScore[0];
 }
 
 //This function allows to reset either the entire games score or just a single questions previously earned score.
@@ -93,20 +93,20 @@ function scoreReset(hardReset) {
 	//Reset all scores
 	if (hardReset == true)
 	{
-		for(var i = 0; i <= currentGameSession.scoreWeights.length; i++)
+		for(var i = 0; i <= currentGameSession.score.length; i++)
 		{
-			currentGameSession.scoreWeights[i] = 0;
+			currentGameSession.score[i] = 0;
 		}
 	}
 	//reset current question only
 	else if(question.nextQIndex != 0)
 	{
 		//access the questions score
-		currentGameSession.scoreWeights[question.nextQIndex] = 0;
+		currentGameSession.score[question.nextQIndex] = 0;
 	}
 	calculateCurrentScore();
 	//update score to user
-	document.getElementById('score').innerHTML = currentGameSession.scoreWeights[0] + " of " + currentGameSession.maxScore[0];
+	document.getElementById('score').innerHTML = currentGameSession.score[0] + " of " + currentGameSession.maxScore[0];
 }
 
 //Sets the max score
@@ -122,18 +122,18 @@ function setMaxScore(max, isQuestionMax) {
 		currentGameSession.maxScore[question.nextQIndex] = max;
 	}
 	//update the score for the user
-	document.getElementById('score').innerHTML = currentGameSession.scoreWeights[0] + " of " + currentGameSession.maxScore[0];
+	document.getElementById('score').innerHTML = currentGameSession.score[0] + " of " + currentGameSession.maxScore[0];
 }
 
 //tally users score
 function calculateCurrentScore() {
 	var tempTotal = 0;
-	for(var i = -1; i < currentGameSession.scoreWeights.length; i++) {
-		if(currentGameSession.scoreWeights[i] != undefined)
+	for(var i = -1; i < currentGameSession.score.length; i++) {
+		if(currentGameSession.score[i] != undefined)
 		{
 			if(i != 0)
 			{
-				tempTotal += currentGameSession.scoreWeights[i];
+				tempTotal += currentGameSession.score[i];
 			}
 		}
 		else
@@ -141,7 +141,7 @@ function calculateCurrentScore() {
 			tempTotal += 0;
 		}
 	}
-	currentGameSession.scoreWeights[0] = tempTotal;
+	currentGameSession.score[0] = tempTotal;
 }
 
 //configure the page header to put 'previous' and 'next' buttons if there are multiple questions in a game.
@@ -150,12 +150,12 @@ function headerSetup(gameName, isMultiQuestion) {
 	{
 		document.getElementById('gameName').innerHTML = '<button type="button" id="prevQ" class="button" onclick="prevQuestion()">Prev</button>' +
 			gameName + '<button type="button" id="nextQ" class="button" onclick="nextQuestion()">Next</button>';	
-		document.getElementById('score').innerHTML = currentGameSession.scoreWeights[0] + " of " + currentGameSession.maxScore[0];
+		document.getElementById('score').innerHTML = currentGameSession.score[0] + " of " + currentGameSession.maxScore[0];
 		document.getElementById('prevQ').disabled = true;
 	}
 	else
 	{
 		document.getElementById('gameName').innerHTML = gameName;
-		document.getElementById('score').innerHTML = currentGameSession.scoreWeights[0] + " of " + currentGameSession.maxScore[0];
+		document.getElementById('score').innerHTML = currentGameSession.score[0] + " of " + currentGameSession.maxScore[0];
 	}
 }

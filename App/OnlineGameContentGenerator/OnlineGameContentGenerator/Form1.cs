@@ -391,8 +391,7 @@ namespace OnlineGameContentGenerator
                 if (question.Value is questionObjectSimple)
                 {
                     documentContent.Append("function q" + i + "() {");
-                    documentContent.Append("question = {};");
-                    documentContent.Append("currentGameSession.scoreWeights.push(" + question.Value.weight + ");");
+                    documentContent.Append("question = {};");                    
 
                     for (int c = 0; c < question.Value.questionItems.Count; c++)
                     {
@@ -420,7 +419,7 @@ namespace OnlineGameContentGenerator
                             options += ", \"" + question.Value.questionItems[c].itemText + "\"";
                         }
                     }
-                    documentContent.Append("currentGameSession.maxScore.push(" + maxScore + ");");
+                    
                     documentContent.Append("var o = [" + options + "];");
                     //Enable popups and include popup items
                     for (int y = 0; y < question.Value.questionItems.Count; y++)
@@ -443,6 +442,17 @@ namespace OnlineGameContentGenerator
                         nextQuestion = -1;
                     }
                     documentContent.Append("question = {nextQIndex: " + nextQuestion + ", question: '" + question.Value.questionText + "', answer: answer, options: o, popup: " + popup.ToString().ToLower() + ", popupItems: popupItems};");
+
+                    documentContent.Append("if (currentGameSession.scoreWeights.length >= question.nextQIndex){");
+                    documentContent.Append("currentGameSession.score[question.nextQIndex] =0;");
+                    documentContent.Append("currentGameSession.scoreWeights[question.nextQIndex] =" + question.Value.weight + ";");
+                    documentContent.Append("currentGameSession.maxScore[question.nextQIndex] =" + question.Value.weight + ";}");
+                    documentContent.Append("else {");
+                    documentContent.Append("currentGameSession.score.push(0);");
+                    documentContent.Append("currentGameSession.scoreWeights.push(" + question.Value.weight + ");");
+                    documentContent.Append("currentGameSession.maxScore.push(" + question.Value.weight + ");");
+                    documentContent.Append("}");
+
                     documentContent.Append("multiStart();");
                     documentContent.Append("}");
                 }
@@ -454,7 +464,6 @@ namespace OnlineGameContentGenerator
 
                     documentContent.Append("function q" + i + "() {");
                     documentContent.Append("question = {};");
-                    documentContent.Append("currentGameSession.scoreWeights.push(" + question.Value.weight + ");");
 
                     for (int j = 0; j < question.Value.questionItems.Count; j++)
                     {
@@ -536,12 +545,22 @@ namespace OnlineGameContentGenerator
                         nextQuestion = -1;
                     }
                     maxScore = complexOptions.Count;
-                    documentContent.Append("currentGameSession.maxScore.push(" + maxScore + ");");
                     documentContent.Append("var options = [" + options + "];");
                     documentContent.Append("var itemDrops = [" + itemDrops + "];");
                     documentContent.Append("var answers = new Array(2);");
                     documentContent.Append(answers);
                     documentContent.Append("question = {nextQIndex: " + nextQuestion + ", question: '" + question.Value.questionText + "', answer: answers, options: options, itemDrops: itemDrops};");
+
+                    documentContent.Append("if (currentGameSession.scoreWeights.length >= question.nextQIndex){");
+                    documentContent.Append("currentGameSession.score[question.nextQIndex] =0;");
+                    documentContent.Append("currentGameSession.scoreWeights[question.nextQIndex] =" + question.Value.weight + ";");
+                    documentContent.Append("currentGameSession.maxScore[question.nextQIndex] =" + question.Value.weight + ";}");
+                    documentContent.Append("else {");
+                    documentContent.Append("currentGameSession.score.push(0);");
+                    documentContent.Append("currentGameSession.scoreWeights.push(" + question.Value.weight + ");");
+                    documentContent.Append("currentGameSession.maxScore.push(" + question.Value.weight + ");");
+                    documentContent.Append("}");
+
                     documentContent.Append("dndStart();}");
                 }
                 i++;

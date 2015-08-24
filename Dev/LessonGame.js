@@ -27,6 +27,8 @@ function question1() {
 	//Check if the score exists
 	if (currentGameSession.scoreWeights.length >= question.nextQIndex)
 	{
+		//set the default score for the question (Typically 0)
+		currentGameSession.score[question.nextQIndex] = 0;
 		//add the weight of the question to the scoreWeights array. (Sets the weight)
 		currentGameSession.scoreWeights[question.nextQIndex] = 5;
 		//Sets the questions max score
@@ -34,6 +36,8 @@ function question1() {
 	}
 	else
 	{
+		////set the default score for the question (Typically 0)
+		currentGameSession.score.push(0);
 		//add the weight of the question to the scoreWeights array. (Sets the weight)
 		currentGameSession.scoreWeights.push(5);
 		//Sets the questions max score
