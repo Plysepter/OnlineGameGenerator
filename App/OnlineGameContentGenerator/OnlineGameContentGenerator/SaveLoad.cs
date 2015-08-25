@@ -224,7 +224,7 @@ namespace OnlineGameContentGenerator
         }
 
         private void loadAllTheThings()
-        {            
+        {
             //Credit to code goes to these glorious people http://www.techcoil.com/blog/how-to-save-and-load-objects-to-and-from-file-in-c/
             BinaryFormatter formatter = new BinaryFormatter();
             OpenFileDialog ofd1 = new OpenFileDialog();
