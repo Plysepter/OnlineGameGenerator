@@ -59,11 +59,12 @@ body {
 .option {
 	padding: 0;
 	display: block;
-	margin-left: 45%;
+	margin: 0 auto;
 	margin-bottom: 1%;
 	border: 0;
-	width: 8em;
-	height: 3em;
+	min-width: 8em;
+	max-width: 15em;
+	min-height: 3em;
 	color: #FFFFFF;
 	background: #330072;
 	border-radius: 3px;
