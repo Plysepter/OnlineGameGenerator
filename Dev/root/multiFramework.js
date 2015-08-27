@@ -14,7 +14,7 @@ function multiStart() {
 function multiCheck(e, optionNumber)
 {
 	//reset question score
-	var playerAnswer = e.target.outerText;
+	var playerAnswer = e.target.textContent;
 	//Check if user selected correct answer
 	if(playerAnswer == question.answer)
 	{
